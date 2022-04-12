@@ -10,6 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Status {
+  attended
+  not_attended
+  pending
+}
+
 model Scheduling {
   date_time DateTime @id
   users     User[]
@@ -22,5 +28,6 @@ model User {
   birth_date   DateTime
   scheduling   Scheduling @relation(fields: [schedulingId], references: [date_time])
   schedulingId DateTime
+  status       Status     @default(pending)
 
 }
