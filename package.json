@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,9 +19,11 @@
   },
   "homepage": "https://github.com/LulinhaOliveira/desafio-pitang-2022-backend#readme",
   "dependencies": {
+    "@prisma/client": "^3.12.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "prisma": "^3.12.0"
   },
   "devDependencies": {
     "eslint": "^8.13.0"
