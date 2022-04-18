@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -19,15 +19,27 @@
   },
   "homepage": "https://github.com/LulinhaOliveira/desafio-pitang-2022-backend#readme",
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@jest/types": "^27.5.1",
     "@prisma/client": "^3.12.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "jest-mock-extended": "2.0.4",
     "morgan": "^1.10.0",
-    "prisma": "^3.12.0"
+    "mysql2": "^2.3.3",
+    "prisma": "^3.12.0",
+    "sequelize": "^6.19.0",
+    "ts-jest": "^27.1.4",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "eslint": "^8.13.0"
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
+    "@types/jest": "^27.4.1",
+    "eslint": "^8.13.0",
+    "jest": "^27.5.1",
+    "supertest": "^6.2.2"
   }
 }

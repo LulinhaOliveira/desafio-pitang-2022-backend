@@ -1,6 +1,5 @@
-import dayjs from 'dayjs';
-import prisma from '@prisma/client';
-const prismaClient = new prisma.PrismaClient();
+
+import prismaClient from "../database/index.js";
 
 class SchedulingController {
     async store(request, response) {
@@ -46,6 +45,7 @@ class SchedulingController {
                     console.log(result);
                     if (result !== undefined) {
                         return response.status(400).send({
+                            Error : true,
                             Message:
                                 'Agendamentos devem ter uma hora de diferença',
                         });
