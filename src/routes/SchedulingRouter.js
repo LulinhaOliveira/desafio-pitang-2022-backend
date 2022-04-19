@@ -7,5 +7,6 @@ const router = express.Router();
 
 router.get('/scheduling', schedulingController.getAll);
 router.post('/scheduling', schedulingController.store);
+router.patch('/scheduling/:id', schedulingController.uptadedStatus);
 
 export default router;
