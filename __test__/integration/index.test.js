@@ -38,6 +38,11 @@ const scheduling = [
         name: 'UserTest3',
         birth_date: '1999-01-01T12:00:00.000Z',
     },
+    {
+        date_time: '2019-01-03T12:00:00.000Z',
+        name: 'UserTest4',
+        birth_date: '1999-01-01T12:00:00.000Z',
+    },
 ];
 
 describe('Test Router Post', () => {
@@ -52,7 +57,9 @@ describe('Test Router Post', () => {
             .send(scheduling[0]) // vamos enviar esse arquivo
             .then((response) => {
                 chai.expect(response.status).to.eql(201);
-                chai.expect(response.body).to.eql(resultExpect);
+                chai.expect(response.body.criado).to.eql(resultExpect.criado);
+                chai.expect(response.body.agendamento).to.eql(resultExpect.agendamento);
+
             });
     });
 
@@ -112,7 +119,8 @@ describe('Test Router Post', () => {
             .send(scheduling[2]) // vamos enviar esse arquivo
             .then((response) => {
                 chai.expect(response.status).to.eql(201);
-                chai.expect(response.body).to.eql(resultExpect);
+                chai.expect(response.body.criado).to.eql(resultExpect.criado);
+                chai.expect(response.body.agendamento).to.eql(resultExpect.agendamento);
             });
     });
 
@@ -144,8 +152,8 @@ describe('Test Router Post', () => {
     });
 });
 
-describe(("Test Router GET"),() =>{
-    it("Get All Sheduling", async ()=>{
+describe(("Test Router GET"), () =>{
+    it("Get All Sheduling", async () =>{
         await chai.request(app).get("/scheduling").then((response)=>{
             const qtdScheduling = response.body.reduce((total, element) => {
                 return total + element.users.length;
@@ -154,5 +162,17 @@ describe(("Test Router GET"),() =>{
             chai.expect(qtdScheduling).to.eql(21);
             chai.expect(response.status).to.eql(200);
         });
+    });
+});
+
+describe(("Teste Router PATCH"), () =>{
+    it("Uptaded Status", async () => {
+        await chai.request(app).post("/scheduling").send(scheduling[3]).then( async (response)=>{
+            await chai.request(app).patch(`/scheduling/${response.body.result.id}`).send({status : "attended"})
+            .then((response) => {
+                chai.expect(response.body.atualizado).to.eql(true);
+            });
+        });
+        
     });
 });

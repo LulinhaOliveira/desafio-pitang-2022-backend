@@ -57,7 +57,7 @@ class SchedulingController {
                             },
                         });
 
-                        await prismaClient.user.create({
+                        const result = await prismaClient.user.create({
                             data: {
                                 name,
                                 birth_date,
@@ -67,7 +67,7 @@ class SchedulingController {
 
                         return response
                             .status(201)
-                            .send({ criado: true, agendamento: 1 });
+                            .send({ criado: true, agendamento : 1, result });
                     }
                 } else {
                     if (scheduling.users.length < 2) {
@@ -112,6 +112,26 @@ class SchedulingController {
         } catch (error) {
             console.log(error);
             return response.status(500).send({ Error: 'Falha ao Buscr Dados' , Message : error });
+        }
+    }
+
+    async uptadedStatus(request, response){
+        const { status } = request.body;
+        const { id } = request.params;
+
+        try {
+            await prismaClient.user.update({
+                where : {
+                    id,
+                },
+                data : {
+                    status
+                },
+            });
+
+            return response.status(200).send({ atualizado: true });
+        } catch (error) {
+             return response.status(500).send({ Error: 'Falha ao Atualizar Dado' , Message : error });
         }
     }
 }
