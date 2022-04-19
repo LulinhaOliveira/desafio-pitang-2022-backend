@@ -1,4 +1,4 @@
-import app from './config/index.js';
+import {app} from './config/index.js';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '../.env' });

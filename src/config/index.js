@@ -9,4 +9,4 @@ app.use(morgan('dev'));
 app.use(cors());
 app.use(SchedulingRouter);
 
-export default app;
+export  {app};

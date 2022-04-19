@@ -1,6 +1,6 @@
-import dayjs from 'dayjs';
-import prisma from '@prisma/client';
-const prismaClient = new prisma.PrismaClient();
+
+import PrismaClient from "../database/index.js";
+const prismaClient = new PrismaClient();
 
 class SchedulingController {
     async store(request, response) {
@@ -43,9 +43,10 @@ class SchedulingController {
                             3600000;
                         return difTimeHrs > -1 && difTimeHrs < 1;
                     });
-                    console.log(result);
+                    
                     if (result !== undefined) {
                         return response.status(400).send({
+                            Error : true,
                             Message:
                                 'Agendamentos devem ter uma hora de diferença',
                         });
@@ -109,7 +110,8 @@ class SchedulingController {
 
             response.status(200).send(allScheduling);
         } catch (error) {
-            return response.status(500).send({ Error: 'Falha ao Buscr Dados' });
+            console.log(error);
+            return response.status(500).send({ Error: 'Falha ao Buscr Dados' , Message : error });
         }
     }
 }
