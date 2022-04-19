@@ -58,8 +58,9 @@ describe('Test Router Post', () => {
             .then((response) => {
                 chai.expect(response.status).to.eql(201);
                 chai.expect(response.body.criado).to.eql(resultExpect.criado);
-                chai.expect(response.body.agendamento).to.eql(resultExpect.agendamento);
-
+                chai.expect(response.body.agendamento).to.eql(
+                    resultExpect.agendamento
+                );
             });
     });
 
@@ -120,7 +121,9 @@ describe('Test Router Post', () => {
             .then((response) => {
                 chai.expect(response.status).to.eql(201);
                 chai.expect(response.body.criado).to.eql(resultExpect.criado);
-                chai.expect(response.body.agendamento).to.eql(resultExpect.agendamento);
+                chai.expect(response.body.agendamento).to.eql(
+                    resultExpect.agendamento
+                );
             });
     });
 
@@ -152,27 +155,36 @@ describe('Test Router Post', () => {
     });
 });
 
-describe(("Test Router GET"), () =>{
-    it("Get All Sheduling", async () =>{
-        await chai.request(app).get("/scheduling").then((response)=>{
-            const qtdScheduling = response.body.reduce((total, element) => {
-                return total + element.users.length;
-            }, 0);
+describe('Test Router GET', () => {
+    it('Get All Sheduling', async () => {
+        await chai
+            .request(app)
+            .get('/scheduling')
+            .then((response) => {
+                const qtdScheduling = response.body.reduce((total, element) => {
+                    return total + element.users.length;
+                }, 0);
 
-            chai.expect(qtdScheduling).to.eql(21);
-            chai.expect(response.status).to.eql(200);
-        });
+                chai.expect(qtdScheduling).to.eql(21);
+                chai.expect(response.status).to.eql(200);
+            });
     });
 });
 
-describe(("Teste Router PATCH"), () =>{
-    it("Uptaded Status", async () => {
-        await chai.request(app).post("/scheduling").send(scheduling[3]).then( async (response)=>{
-            await chai.request(app).patch(`/scheduling/${response.body.result.id}`).send({status : "attended"})
-            .then((response) => {
-                chai.expect(response.body.atualizado).to.eql(true);
+describe('Teste Router PATCH', () => {
+    it('Uptaded Status', async () => {
+        await chai
+            .request(app)
+            .post('/scheduling')
+            .send(scheduling[3])
+            .then(async (response) => {
+                await chai
+                    .request(app)
+                    .patch(`/scheduling/${response.body.result.id}`)
+                    .send({ status: 'attended' })
+                    .then((response) => {
+                        chai.expect(response.body.atualizado).to.eql(true);
+                    });
             });
-        });
-        
     });
 });

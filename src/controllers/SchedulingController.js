@@ -1,5 +1,4 @@
-
-import PrismaClient from "../database/index.js";
+import PrismaClient from '../database/index.js';
 const prismaClient = new PrismaClient();
 
 class SchedulingController {
@@ -7,6 +6,7 @@ class SchedulingController {
         const { date_time, name, birth_date } = request.body;
         const date_aux = new Date(date_time.split('T')[0]);
         const date_aux2 = new Date(date_aux.valueOf());
+        
         date_aux2.setDate(date_aux2.getDate() + 1);
         date_aux2.toDateString;
 
@@ -43,10 +43,10 @@ class SchedulingController {
                             3600000;
                         return difTimeHrs > -1 && difTimeHrs < 1;
                     });
-                    
+
                     if (result !== undefined) {
                         return response.status(400).send({
-                            Error : true,
+                            Error: true,
                             Message:
                                 'Agendamentos devem ter uma hora de diferença',
                         });
@@ -67,7 +67,7 @@ class SchedulingController {
 
                         return response
                             .status(201)
-                            .send({ criado: true, agendamento : 1, result });
+                            .send({ criado: true, agendamento: 1, result });
                     }
                 } else {
                     if (scheduling.users.length < 2) {
@@ -111,27 +111,31 @@ class SchedulingController {
             response.status(200).send(allScheduling);
         } catch (error) {
             console.log(error);
-            return response.status(500).send({ Error: 'Falha ao Buscr Dados' , Message : error });
+            return response
+                .status(500)
+                .send({ Error: 'Falha ao Buscr Dados', Message: error });
         }
     }
 
-    async uptadedStatus(request, response){
+    async uptadedStatus(request, response) {
         const { status } = request.body;
         const { id } = request.params;
 
         try {
             await prismaClient.user.update({
-                where : {
+                where: {
                     id,
                 },
-                data : {
-                    status
+                data: {
+                    status,
                 },
             });
 
             return response.status(200).send({ atualizado: true });
         } catch (error) {
-             return response.status(500).send({ Error: 'Falha ao Atualizar Dado' , Message : error });
+            return response
+                .status(500)
+                .send({ Error: 'Falha ao Atualizar Dado', Message: error });
         }
     }
 }
