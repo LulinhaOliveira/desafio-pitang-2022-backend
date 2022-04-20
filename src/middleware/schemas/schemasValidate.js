@@ -1,4 +1,12 @@
 import Joi from 'joi';
+import prisma from '@prisma/client';
+const { Status } = prisma;
+
+let arrayStatus = [];
+
+for (let prop in Status) {
+    arrayStatus.push(`${prop}`);
+}
 
 const querySchemaCreate = Joi.object({
     name: Joi.string().required().messages({
@@ -20,7 +28,7 @@ const querySchemaCreate = Joi.object({
 });
 
 const querySchemaUptaded = Joi.object({
-    status: Joi.valid('attended', 'not_attended', 'pending')
+    status: Joi.valid(...arrayStatus)
         .required()
         .messages({
             'any.only': 'Tenha Certeza de Está Colocando um Status Valido',
