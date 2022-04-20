@@ -107,7 +107,7 @@ describe('Test Router Post', () => {
         await chai
             .request(app)
             .post('/scheduling')
-            .send(scheduling[1]) // vamos enviar esse arquivo
+            .send(scheduling[1])
             .then((response) => {
                 chai.expect(response.status).to.eql(400);
                 chai.expect(response.body.Error).to.eql(resultExpect.Error);
@@ -123,7 +123,7 @@ describe('Test Router Post', () => {
         await chai
             .request(app)
             .post('/scheduling')
-            .send(scheduling[2]) // vamos enviar esse arquivo
+            .send(scheduling[2])
             .then((response) => {
                 chai.expect(response.status).to.eql(201);
                 chai.expect(response.body.created).to.eql(resultExpect.created);
@@ -160,6 +160,54 @@ describe('Test Router Post', () => {
         chai.expect(response.body.Error).to.eql(resultExpect.Error);
         chai.expect(response.body).to.haveOwnProperty('Message');
     });
+
+    it('Created  Scheduling Validaded date_time ERROR', async () => {
+        const dataInvalid = {
+            name: 'UserTest2',
+            birth_date: '1999-01-01T12:00:00.000Z',
+        };
+
+        await chai
+            .request(app)
+            .post('/scheduling')
+            .send(dataInvalid)
+            .then((response) => {
+                chai.expect(response.status).to.eql(400);
+                chai.expect(response.body).to.haveOwnProperty('Message');
+            });
+    });
+
+    it('Created  Scheduling Validaded name ERROR', async () => {
+        const dataInvalid = {
+            date_time: '2019-01-01T12:00:00.000Z',
+            birth_date: '1999-01-01T12:00:00.000Z',
+        };
+
+        await chai
+            .request(app)
+            .post('/scheduling')
+            .send(dataInvalid)
+            .then((response) => {
+                chai.expect(response.status).to.eql(400);
+                chai.expect(response.body).to.haveOwnProperty('Message');
+            });
+    });
+
+    it('Created  Scheduling Validaded birht_date ERROR', async () => {
+        const dataInvalid = {
+            date_time: '2019-01-01T17:00:00.000Z',
+            name: 'UserTest5',
+        };
+
+        await chai
+            .request(app)
+            .post('/scheduling')
+            .send(dataInvalid)
+            .then((response) => {
+                chai.expect(response.status).to.eql(400);
+                chai.expect(response.body).to.haveOwnProperty('Message');
+            });
+    });
 });
 
 describe('Test Router GET', () => {
@@ -190,8 +238,28 @@ describe('Teste Router PATCH', () => {
                     .patch(`/scheduling/${response.body.result.id}`)
                     .send({ status: 'attended' })
                     .then((response) => {
+                        chai.expect(response.status).to.eql(200);
                         chai.expect(response.body.uptaded).to.eql(true);
                         chai.expect(response.body.status).to.eql('attended');
+                    });
+            });
+    });
+
+    it('Uptaded Status Validaded Data ERROR', async () => {
+        await chai
+            .request(app)
+            .post('/scheduling')
+            .send(scheduling[3])
+            .then(async (response) => {
+                await chai
+                    .request(app)
+                    .patch(`/scheduling/${response.body.result.id}`)
+                    .send({ status: 'attended_error' })
+                    .then((response) => {
+                        chai.expect(response.status).to.eql(400);
+                        chai.expect(response.body).to.haveOwnProperty(
+                            'Message'
+                        );
                     });
             });
     });
