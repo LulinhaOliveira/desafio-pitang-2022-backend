@@ -48,34 +48,39 @@ const scheduling = [
 describe('Test Router Post', () => {
     it('Primerio Agendamento Naquele Dia e Hora', async () => {
         const resultExpect = {
-            criado: true,
-            agendamento: 1,
+            created: true,
+            scheduling_number: 1,
         };
         await chai
             .request(app)
             .post('/scheduling')
-            .send(scheduling[0]) // vamos enviar esse arquivo
+            .send(scheduling[0])
             .then((response) => {
                 chai.expect(response.status).to.eql(201);
-                chai.expect(response.body.criado).to.eql(resultExpect.criado);
-                chai.expect(response.body.agendamento).to.eql(
-                    resultExpect.agendamento
+                chai.expect(response.body.created).to.eql(resultExpect.created);
+                chai.expect(response.body.scheduling_number).to.eql(
+                    resultExpect.scheduling_number
                 );
+                chai.expect(response.body).to.haveOwnProperty('result');
             });
     });
 
     it('Segundo Agendamento Naquele Dia e Hora', async () => {
         const resultExpect = {
-            criado: true,
-            agendamento: 2,
+            created: true,
+            scheduling_number: 2,
         };
         await chai
             .request(app)
             .post('/scheduling')
-            .send(scheduling[0]) // vamos enviar esse arquivo
+            .send(scheduling[0])
             .then((response) => {
                 chai.expect(response.status).to.eql(201);
-                chai.expect(response.body).to.eql(resultExpect);
+                chai.expect(response.body.created).to.eql(resultExpect.created);
+                chai.expect(response.body.scheduling_number).to.eql(
+                    resultExpect.scheduling_number
+                );
+                chai.expect(response.body).to.haveOwnProperty('result');
             });
     });
 
@@ -90,14 +95,14 @@ describe('Test Router Post', () => {
             .send(scheduling[0]) // vamos enviar esse arquivo
             .then((response) => {
                 chai.expect(response.status).to.eql(400);
-                chai.expect(response.body).to.eql(resultExpect);
+                chai.expect(response.body.Error).to.eql(resultExpect.Error);
+                chai.expect(response.body).to.haveOwnProperty('Message');
             });
     });
 
     it('Falha ao Tentar Agendamento Em Menos de Uma Hora', async () => {
         const resultExpect = {
             Error: true,
-            Message: 'Agendamentos devem ter uma hora de diferença',
         };
         await chai
             .request(app)
@@ -105,14 +110,15 @@ describe('Test Router Post', () => {
             .send(scheduling[1]) // vamos enviar esse arquivo
             .then((response) => {
                 chai.expect(response.status).to.eql(400);
-                chai.expect(response.body).to.eql(resultExpect);
+                chai.expect(response.body.Error).to.eql(resultExpect.Error);
+                chai.expect(response.body).to.haveOwnProperty('Message');
             });
     });
 
     it('Agendamento em Outro Dia', async () => {
         const resultExpect = {
-            criado: true,
-            agendamento: 1,
+            created: true,
+            scheduling_number: 1,
         };
         await chai
             .request(app)
@@ -120,17 +126,17 @@ describe('Test Router Post', () => {
             .send(scheduling[2]) // vamos enviar esse arquivo
             .then((response) => {
                 chai.expect(response.status).to.eql(201);
-                chai.expect(response.body.criado).to.eql(resultExpect.criado);
-                chai.expect(response.body.agendamento).to.eql(
-                    resultExpect.agendamento
+                chai.expect(response.body.created).to.eql(resultExpect.created);
+                chai.expect(response.body.scheduling_number).to.eql(
+                    resultExpect.scheduling_number
                 );
+                chai.expect(response.body).to.haveOwnProperty('result');
             });
     });
 
     it('Falha ao Tentar Mais de 20 Agendamento Por Dia', async () => {
         const resultExpect = {
             Error: true,
-            Message: 'Só Pode Haver 20 Agendamentos Por Dia',
         };
         let response;
         let hr = 13;
@@ -151,7 +157,8 @@ describe('Test Router Post', () => {
                 });
         }
         chai.expect(response.status).to.eql(400);
-        chai.expect(response.body).to.eql(resultExpect);
+        chai.expect(response.body.Error).to.eql(resultExpect.Error);
+        chai.expect(response.body).to.haveOwnProperty('Message');
     });
 });
 
@@ -183,7 +190,8 @@ describe('Teste Router PATCH', () => {
                     .patch(`/scheduling/${response.body.result.id}`)
                     .send({ status: 'attended' })
                     .then((response) => {
-                        chai.expect(response.body.atualizado).to.eql(true);
+                        chai.expect(response.body.uptaded).to.eql(true);
+                        chai.expect(response.body.status).to.eql('attended');
                     });
             });
     });
