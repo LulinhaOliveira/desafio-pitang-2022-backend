@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha dotenv_config_path=.env.test -r dotenv/config __test__/integration/*.test.js --timeout 30000",
+    "start": "node ./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -20,12 +21,19 @@
   "homepage": "https://github.com/LulinhaOliveira/desafio-pitang-2022-backend#readme",
   "dependencies": {
     "@prisma/client": "^3.12.0",
+    "chai": "^4.3.6",
+    "chai-http": "^4.3.0",
     "cors": "^2.8.5",
-    "dayjs": "^1.11.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "express-joi-validation": "^5.0.1",
+    "joi": "^17.6.0",
+    "mocha": "^9.2.2",
     "morgan": "^1.10.0",
-    "prisma": "^3.12.0"
+    "mysql2": "^2.3.3",
+    "prisma": "^3.12.0",
+    "sequelize": "^6.19.0",
+    "should": "^13.2.3"
   },
   "devDependencies": {
     "eslint": "^8.13.0"
