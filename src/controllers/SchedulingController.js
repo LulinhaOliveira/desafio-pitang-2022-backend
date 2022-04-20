@@ -4,18 +4,18 @@ const prismaClient = new PrismaClient();
 class SchedulingController {
     async store(request, response) {
         const { date_time, name, birth_date } = request.body;
-        const date_aux = new Date(date_time.split('T')[0]);
-        const date_aux2 = new Date(date_aux.valueOf());
-        
-        date_aux2.setDate(date_aux2.getDate() + 1);
-        date_aux2.toDateString;
+
+        //Manipulando o datetime para utilizar na consulta ao banco, a fim de retornar apenas os agendamentos do dia;
+        const date_start_day = new Date(date_time.split('T')[0]); // date_start_day => recebe a data com a hora zerada
+        const date_end_day = new Date(date_start_day.valueOf());
+        date_end_day.setDate(date_end_day.getDate() + 1); // date_end_day => altera seu time para o final do dia
 
         try {
             const schedulings = await prismaClient.scheduling.findMany({
                 where: {
                     date_time: {
-                        gte: date_aux,
-                        lt: date_aux2,
+                        gte: date_start_day,
+                        lt: date_end_day,
                     },
                 },
                 include: {
@@ -23,11 +23,12 @@ class SchedulingController {
                 },
             });
 
-            const qtdScheduling = schedulings.reduce((total, element) => {
+            const qtdSchedulings = schedulings.reduce((total, element) => {
                 return total + element.users.length;
             }, 0);
 
-            if (qtdScheduling < 20) {
+            if (qtdSchedulings < 20) {
+                //Verifica se a data e hora do agendamento já existe
                 const scheduling = schedulings.find((value) => {
                     return (
                         value.date_time.valueOf() ===
@@ -36,6 +37,7 @@ class SchedulingController {
                 });
 
                 if (scheduling === undefined) {
+                    //Verifica a existência de outro agendamento a menos de uma hora de diferença
                     const result = schedulings.find((value) => {
                         const difTimeHrs =
                             ((value.date_time - new Date(date_time)) %
@@ -47,8 +49,7 @@ class SchedulingController {
                     if (result !== undefined) {
                         return response.status(400).send({
                             Error: true,
-                            Message:
-                                'Agendamentos devem ter uma hora de diferença',
+                            Message: 'Appointments must be one hour apart',
                         });
                     } else {
                         await prismaClient.scheduling.create({
@@ -65,13 +66,16 @@ class SchedulingController {
                             },
                         });
 
-                        return response
-                            .status(201)
-                            .send({ criado: true, agendamento: 1, result });
+                        return response.status(201).send({
+                            created: true,
+                            scheduling_number: 1,
+                            result,
+                        });
                     }
                 } else {
+                    // Verifica se o agendamento já possue duas pessoas para a data e hora
                     if (scheduling.users.length < 2) {
-                        await prismaClient.user.create({
+                        const result = await prismaClient.user.create({
                             data: {
                                 name,
                                 birth_date,
@@ -79,24 +83,27 @@ class SchedulingController {
                             },
                         });
 
-                        return response
-                            .status(201)
-                            .send({ criado: true, agendamento: 2 });
+                        return response.status(201).send({
+                            created: true,
+                            scheduling_number: 2,
+                            result,
+                        });
                     } else {
                         return response.status(400).send({
                             Error: true,
-                            Message: 'Só Pode Haver 2 Agendamentos Por Hora',
+                            Message:
+                                'There can only be 2 appointments per hour',
                         });
                     }
                 }
             } else {
                 return response.status(400).send({
                     Error: true,
-                    Message: 'Só Pode Haver 20 Agendamentos Por Dia',
+                    Message: 'There can only be 20 appointments per day',
                 });
             }
         } catch (error) {
-            response.status(500).send({ Error: 'Falha ao Criar Dados' });
+            response.status(500).send({ Error: 'Failed to Create Data' });
         }
     }
 
