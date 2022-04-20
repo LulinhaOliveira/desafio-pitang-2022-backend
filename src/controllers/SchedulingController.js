@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import prisma from '@prisma/client';
 const prismaClient = new prisma.PrismaClient();
 
@@ -15,7 +14,7 @@ class SchedulingController {
 
             response.status(200).send(allScheduling);
         } catch (error) {
-            return response.status(500).send({ Error: 'Falha ao Buscr Dados' });
+            return response.status(500).send({ Error: 'Failed to Fetch Data' });
         }
     }
 }
