@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import prisma from '@prisma/client';
-const prismaClient = new prisma.PrismaClient();
-=======
 import PrismaClient from '../database/index.js';
 const prismaClient = new PrismaClient();
->>>>>>> efb8ad60a259df2554dc68cf8711399429aec775
 
 class SchedulingController {
     async store(request, response) {
@@ -122,13 +117,7 @@ class SchedulingController {
 
             response.status(200).send(allScheduling);
         } catch (error) {
-<<<<<<< HEAD
             return response.status(500).send({ Error: 'Failed to Fetch Data' });
-=======
-            console.log(error);
-            return response
-                .status(500)
-                .send({ Error: 'Falha ao Buscr Dados', Message: error });
         }
     }
 
@@ -137,7 +126,7 @@ class SchedulingController {
         const { id } = request.params;
 
         try {
-            await prismaClient.user.update({
+            const user = await prismaClient.user.update({
                 where: {
                     id,
                 },
@@ -146,12 +135,14 @@ class SchedulingController {
                 },
             });
 
-            return response.status(200).send({ atualizado: true });
-        } catch (error) {
             return response
-                .status(500)
-                .send({ Error: 'Falha ao Atualizar Dado', Message: error });
->>>>>>> efb8ad60a259df2554dc68cf8711399429aec775
+                .status(200)
+                .send({ uptaded: true, id: user.id, status: user.status });
+        } catch (error) {
+            return response.status(500).send({
+                Error: 'Failed to Update Data',
+                Message: error.meta.cause,
+            });
         }
     }
 }

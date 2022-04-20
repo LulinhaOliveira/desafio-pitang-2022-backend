@@ -183,7 +183,8 @@ describe('Teste Router PATCH', () => {
                     .patch(`/scheduling/${response.body.result.id}`)
                     .send({ status: 'attended' })
                     .then((response) => {
-                        chai.expect(response.body.atualizado).to.eql(true);
+                        chai.expect(response.body.uptaded).to.eql(true);
+                        chai.expect(response.body.status).to.eql('attended');
                     });
             });
     });
