@@ -15,7 +15,8 @@ before((done) => {
 after(async () => {
     try {
         const sequelize = new Sequelize(process.env.DATABASE_URL);
-        await sequelize.query(`DROP DATABASE pitang_challeng_test`);
+        const db_name = process.env.DATABASE_URL.split('/');
+        await sequelize.query(`DROP DATABASE ${db_name[db_name.length - 1]}`);
         sequelize.close();
     } catch (error) {
         console.log(error);
